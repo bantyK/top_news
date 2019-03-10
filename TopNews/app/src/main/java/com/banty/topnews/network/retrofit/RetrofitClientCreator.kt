@@ -1,0 +1,41 @@
+package com.banty.topnews.network.retrofit
+
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
+import retrofit2.Retrofit
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
+import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.TimeUnit
+
+/**
+ * Created by Banty on 10/03/19.
+ */
+class RetrofitClientCreator {
+    companion object {
+        //base url for all the bitcoin charts api calls
+        private const val BASE_URL = "https://newsapi.org/"
+
+        // okhttp client with time out set as 60 seconds
+        private fun getOkHttpClient(): OkHttpClient {
+            val interceptor = HttpLoggingInterceptor()
+            interceptor.level = HttpLoggingInterceptor.Level.BODY
+
+            return OkHttpClient.Builder()
+                .readTimeout(60, TimeUnit.SECONDS)
+                .connectTimeout(60, TimeUnit.SECONDS)
+                .addInterceptor(interceptor)
+                .build()
+        }
+
+
+        //create and returns an instance of retrofit builder
+        fun createRetrofitClient(): Retrofit {
+            return Retrofit.Builder()
+                .addConverterFactory(GsonConverterFactory.create())
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .baseUrl(BASE_URL)
+                .client(getOkHttpClient())
+                .build()
+        }
+    }
+}
