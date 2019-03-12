@@ -20,7 +20,7 @@ private val TAG = "MainActivity"
 class MainActivity : AppCompatActivity(), MainActivityPresenter.View, CountrySelectionListener {
 
     override fun showNewsFragment(country: String) {
-        val newsFragment = NewsFragment()
+        val newsFragment = NewsFragment.newInstance(country)
         supportFragmentManager.beginTransaction()
             .replace(R.id.fragment_container, newsFragment)
             .commit()
