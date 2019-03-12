@@ -1,5 +1,6 @@
 package com.banty.topnews.ui.activities.main
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
@@ -8,22 +9,23 @@ import com.banty.topnews.di.component.DaggerMainActivityComponent
 import com.banty.topnews.di.module.PresenterModule
 import com.banty.topnews.di.module.RepositoryModule
 import com.banty.topnews.repository.NewsRepository
+import com.banty.topnews.ui.activities.news.NewsActivity
 import com.banty.topnews.ui.fragments.CountryChoiceFragment
-import com.banty.topnews.ui.fragments.NewsFragment
 import com.banty.topnews.ui.presenter.MainActivityPresenter
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
+
 
 private val TAG = "MainActivity"
 
 class MainActivity : AppCompatActivity(), MainActivityPresenter.View, CountrySelectionListener {
 
     override fun showNewsFragment(country: String) {
-        val newsFragment = NewsFragment.newInstance(country)
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container, newsFragment)
-            .commit()
+        val intent = Intent(this@MainActivity, NewsActivity::class.java)
+        intent.putExtra(NewsActivity.INTENT_KEY_COUNTRY_ID, country)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        startActivity(intent)
     }
 
     override fun countrySelected(country: String) {
@@ -49,7 +51,6 @@ class MainActivity : AppCompatActivity(), MainActivityPresenter.View, CountrySel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
         DaggerMainActivityComponent
             .builder()
             .repositoryModule(RepositoryModule(this.applicationContext))
@@ -57,6 +58,7 @@ class MainActivity : AppCompatActivity(), MainActivityPresenter.View, CountrySel
             .build()
             .injectMainActivityDependencies(this)
     }
+
 
     override fun onResume() {
         super.onResume()
@@ -74,6 +76,7 @@ class MainActivity : AppCompatActivity(), MainActivityPresenter.View, CountrySel
             }, { error ->
                 Log.d("Banty", "Error : ${error.message}")
             })
-
     }
+
+
 }
