@@ -18,7 +18,7 @@ import javax.inject.Singleton
  * Created by Banty on 10/03/19.
  */
 @Module
-class AppModule(val context: Context) {
+class RepositoryModule(val context: Context) {
 
     @Provides
     @Singleton
