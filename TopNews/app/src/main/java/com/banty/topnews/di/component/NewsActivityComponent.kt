@@ -1,8 +1,8 @@
 package com.banty.topnews.di.component
 
-import com.banty.topnews.di.module.PresenterModule
 import com.banty.topnews.di.module.RepositoryModule
 import com.banty.topnews.ui.activities.main.MainActivity
+import com.banty.topnews.ui.activities.news.NewsActivity
 import dagger.Component
 import javax.inject.Singleton
 
@@ -12,7 +12,7 @@ import javax.inject.Singleton
  *
  */
 @Singleton
-@Component(modules = [RepositoryModule::class, PresenterModule::class])
-interface MainActivityComponent {
-    fun injectMainActivityDependencies(mainActivity: MainActivity)
+@Component(modules = [RepositoryModule::class])
+interface NewsActivityComponent {
+    fun injectNewsActivityDependencies(newsActivity: NewsActivity)
 }

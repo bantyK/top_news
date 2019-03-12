@@ -50,4 +50,8 @@ dependencies {
     implementation "io.reactivex.rxjava2:rxandroid:$rxjava_version"
 
     testImplementation "org.mockito:mockito-inline:$mockito_version"
+
+    //Glide for image loading
+    implementation "com.github.bumptech.glide:glide:$glide_version"
+    kapt "com.github.bumptech.glide:compiler:$glide_version"
 }
