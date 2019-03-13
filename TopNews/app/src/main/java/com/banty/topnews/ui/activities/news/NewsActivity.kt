@@ -111,13 +111,32 @@ class NewsActivity : AppCompatActivity(), NewsActivityPresenter.View, Navigation
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
-
+        var category = ""
         when(item.itemId) {
             R.id.nav_business -> {
-                newsActivityPresenter.changeArticles("business")
+                category = "business"
+            }
+            R.id.nav_entertainment -> {
+                category = "entertainment"
+            }
+            R.id.nav_general -> {
+                category = "general"
+            }
+            R.id.nav_health -> {
+                category = "health"
+            }
+            R.id.nav_science -> {
+                category = "science"
+            }
+            R.id.nav_sports -> {
+                category = "sports"
+            }
+            R.id.nav_technology -> {
+                category = "technology"
             }
         }
 
+        newsActivityPresenter.changeArticles(category)
         drawer_layout.closeDrawer(GravityCompat.START)
         return true
     }
