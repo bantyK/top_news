@@ -52,7 +52,7 @@ data class Article(
 data class Source(
     @SerializedName("id") val newsSourceId: String?,
     @SerializedName("name") val newsSourceName: String?
-) : Parcelable {
+) : Parcelable, Serializable {
     constructor(parcel: Parcel) : this(
         parcel.readString(),
         parcel.readString()

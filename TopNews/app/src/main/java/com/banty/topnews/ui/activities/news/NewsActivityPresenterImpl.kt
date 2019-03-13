@@ -3,6 +3,7 @@ package com.banty.topnews.ui.activities.news
 import android.util.Log
 import com.banty.topnews.datamodels.Article
 import com.banty.topnews.repository.NewsRepository
+import com.banty.topnews.viewmodel.HeadlinesViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
@@ -11,7 +12,8 @@ import io.reactivex.schedulers.Schedulers
  */
 class NewsActivityPresenterImpl(
     private val view: NewsActivityPresenter.View,
-    private val newsRepository: NewsRepository
+    private val newsRepository: NewsRepository,
+    private val headlinesViewModel: HeadlinesViewModel
 ) : NewsActivityPresenter {
 
     override fun changeArticles(category: String) {
@@ -36,9 +38,9 @@ class NewsActivityPresenterImpl(
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ response ->
                 response.articles?.apply {
-                    Log.d(TAG, "News articles size : ${response?.articles.size}")
+                    //set the view model with the new value
+                    headlinesViewModel.setHeadlinesViewModel(response?.articles)
                     view.showUI()
-                    view.setRecyclerView(response.articles)
                 }
             }, { error ->
                 Log.d(TAG, "Error : ${error.message}")

@@ -11,7 +11,6 @@ interface NewsActivityPresenter : BasePresenter {
     fun changeArticles(category: String)
 
     interface View {
-        fun setRecyclerView(articles: List<Article>?)
         fun startWebViewActivity(url: String?)
         fun showUI()
         fun hideUI()

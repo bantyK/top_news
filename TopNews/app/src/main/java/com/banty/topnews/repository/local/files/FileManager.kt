@@ -28,7 +28,7 @@ class FileManager constructor(private val applicationContext: Context) {
             oos.close()
             Log.d(logTag, "file stored: $filePath")
         } catch (ex: IOException) {
-            Log.d(logTag, "unable to store file: $filePath")
+            Log.d(logTag, "unable to store file: $filePath :  ${ex.message}")
         }
     }
 

@@ -1,5 +1,7 @@
 package com.banty.topnews.ui.activities.news
 
+import android.arch.lifecycle.Observer
+import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.NavigationView
@@ -22,17 +24,21 @@ import com.banty.topnews.repository.NewsRepository
 import com.banty.topnews.ui.activities.news.recyclerview.ItemClickListener
 import com.banty.topnews.ui.activities.news.recyclerview.NewsRecyclerAdapter
 import com.banty.topnews.ui.activities.webview.WebviewActivity
+import com.banty.topnews.viewmodel.HeadlinesViewModel
 import kotlinx.android.synthetic.main.activity_news.*
 import kotlinx.android.synthetic.main.app_bar_news.*
 import javax.inject.Inject
 
-class NewsActivity : AppCompatActivity(), NewsActivityPresenter.View, NavigationView.OnNavigationItemSelectedListener, ItemClickListener {
+class NewsActivity : AppCompatActivity(), NewsActivityPresenter.View, NavigationView.OnNavigationItemSelectedListener,
+    ItemClickListener {
 
     val TAG = "NewsActivity"
 
-    lateinit var recyclerView: RecyclerView
+    private lateinit var recyclerView: RecyclerView
 
-    lateinit var progressBar:ProgressBar
+    private lateinit var progressBar: ProgressBar
+
+    private lateinit var headlinesViewModel: HeadlinesViewModel
 
     override fun showUI() {
         progressBar.visibility = View.GONE
@@ -51,13 +57,6 @@ class NewsActivity : AppCompatActivity(), NewsActivityPresenter.View, Navigation
     }
 
 
-
-    override fun setRecyclerView(articles: List<Article>?) {
-        Log.d(TAG, "Article list size : ${articles?.size}")
-        recyclerView.setHasFixedSize(true)
-        recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.adapter = NewsRecyclerAdapter(articles, this)
-    }
 
     override fun listItemClicked(newsArticle: Article?) {
         newsActivityPresenter.handleNewsItemClicked(newsArticle)
@@ -86,10 +85,25 @@ class NewsActivity : AppCompatActivity(), NewsActivityPresenter.View, Navigation
             .build()
             .injectNewsActivityDependencies(this)
 
+        headlinesViewModel = ViewModelProviders.of(this).get(HeadlinesViewModel::class.java)
+
         newsActivityPresenter = NewsActivityPresenterImpl(
             this,
-            newsRepository
+            newsRepository,
+            headlinesViewModel
         )
+
+        /**
+        * View model to update the recycler view with new data
+        * */
+        headlinesViewModel.getHeadlinesViewModel()
+            .observe(this,
+                Observer<List<Article>> {
+                    Log.d(TAG, "Article list size : ${it?.size}")
+                    recyclerView.setHasFixedSize(true)
+                    recyclerView.layoutManager = LinearLayoutManager(this)
+                    recyclerView.adapter = NewsRecyclerAdapter(it, this)
+                })
 
     }
 
@@ -112,7 +126,7 @@ class NewsActivity : AppCompatActivity(), NewsActivityPresenter.View, Navigation
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         var category = ""
-        when(item.itemId) {
+        when (item.itemId) {
             R.id.nav_business -> {
                 category = "business"
             }

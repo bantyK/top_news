@@ -3,6 +3,7 @@ package com.banty.topnews.datamodels
 import android.os.Parcel
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 
 /**
  * Created by Banty on 10/03/19.
@@ -11,7 +12,7 @@ data class TopHeadlinesResponse(
     @SerializedName("status") val status: String?,
     @SerializedName("totalResults") val totalResultCount: Int?,
     @SerializedName("articles") val articles: List<Article>?
-) : Parcelable {
+) : Parcelable, Serializable {
     constructor(parcel: Parcel) : this(
         parcel.readString(),
         parcel.readValue(Int::class.java.classLoader) as? Int,
