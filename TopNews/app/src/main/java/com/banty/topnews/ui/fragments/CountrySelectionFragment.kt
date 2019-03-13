@@ -51,7 +51,7 @@ class CountryChoiceFragment : Fragment(), CountrySelectionPresenter.View {
         return view
     }
 
-    private fun CountryChoiceFragment.setCountrySpinner(view: View) {
+    private fun setCountrySpinner(view: View) {
         countrySpinner = view.findViewById(R.id.country_spinner)
 
         ArrayAdapter.createFromResource(context, R.array.country_names, android.R.layout.simple_spinner_item)
@@ -60,7 +60,6 @@ class CountryChoiceFragment : Fragment(), CountrySelectionPresenter.View {
                 // Apply the adapter to the spinner
                 countrySpinner.adapter = it
             }
-
         countrySpinner.post {
             countrySpinner.onItemSelectedListener = CountrySpinnerItemSelectedListener()
         }

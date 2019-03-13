@@ -13,7 +13,8 @@ import io.reactivex.schedulers.Schedulers
 class NewsActivityPresenterImpl(
     private val view: NewsActivityPresenter.View,
     private val newsRepository: NewsRepository,
-    private val headlinesViewModel: HeadlinesViewModel
+    private val headlinesViewModel: HeadlinesViewModel,
+    private val country: String
 ) : NewsActivityPresenter {
 
     override fun changeArticles(category: String) {
@@ -33,7 +34,7 @@ class NewsActivityPresenterImpl(
 
     override fun getNewsHeadlines(category: String, refresh: Boolean) {
         view.hideUI()
-        newsRepository.getNewsHeadlines("in", category, refresh)
+        newsRepository.getNewsHeadlines(country, category, refresh)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ response ->

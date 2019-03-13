@@ -12,7 +12,7 @@ interface NewsApiService {
 
     @GET("v2/top-headlines")
     fun getTopHeadlines(
-        @Query("country") country: String = "in",
+        @Query("country") country: String,
         @Query("apiKey") apiKey: String = "94e491f91fd24aa5bc4cc2d1915d849f",
         @Query("category") category: String = ""
     ): Observable<TopHeadlinesResponse>
