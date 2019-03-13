@@ -7,11 +7,8 @@ import io.reactivex.Observable
 
 class RemoteNewsRepository constructor(val newsApiService: NewsApiService) : NewsRepository {
     override fun getNewsHeadlines(country: String, category: String): Observable<TopHeadlinesResponse> {
-        return if (category.isEmpty()) {
-            newsApiService.getGeneralTopHeadlines(country, "94e491f91fd24aa5bc4cc2d1915d849f")
-        } else {
-            newsApiService.getTopHeadlines(country, "94e491f91fd24aa5bc4cc2d1915d849f", category)
-        }
+        return newsApiService.getTopHeadlines(country, "94e491f91fd24aa5bc4cc2d1915d849f", category)
+
     }
 
 

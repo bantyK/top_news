@@ -26,7 +26,7 @@ class NewsActivityPresenterImpl(
 
     override fun resume() {
         // show general news headlines on app start
-        getNewsHeadlines("")
+        getNewsHeadlines("general")
     }
 
     private fun getNewsHeadlines(category: String) {
