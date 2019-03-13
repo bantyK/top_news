@@ -4,9 +4,11 @@ import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
 import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
+import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
@@ -29,8 +31,9 @@ import kotlinx.android.synthetic.main.activity_news.*
 import kotlinx.android.synthetic.main.app_bar_news.*
 import javax.inject.Inject
 
+
 class NewsActivity : AppCompatActivity(), NewsActivityPresenter.View, NavigationView.OnNavigationItemSelectedListener,
-    ItemClickListener {
+    ItemClickListener, SwipeRefreshLayout.OnRefreshListener {
 
     val TAG = "NewsActivity"
 
@@ -39,6 +42,10 @@ class NewsActivity : AppCompatActivity(), NewsActivityPresenter.View, Navigation
     private lateinit var progressBar: ProgressBar
 
     private lateinit var headlinesViewModel: HeadlinesViewModel
+
+    private lateinit var swipeToRefreshLayout: SwipeRefreshLayout
+
+    private var selectedCategory = "general"
 
     override fun showUI() {
         progressBar.visibility = View.GONE
@@ -55,7 +62,6 @@ class NewsActivity : AppCompatActivity(), NewsActivityPresenter.View, Navigation
         intent.putExtra(WebviewActivity.INTENT_KEY_NEWS_ARTICLE_URL, url)
         startActivity(intent)
     }
-
 
 
     override fun listItemClicked(newsArticle: Article?) {
@@ -94,8 +100,8 @@ class NewsActivity : AppCompatActivity(), NewsActivityPresenter.View, Navigation
         )
 
         /**
-        * View model to update the recycler view with new data
-        * */
+         * View model to update the recycler view with new data
+         * */
         headlinesViewModel.getHeadlinesViewModel()
             .observe(this,
                 Observer<List<Article>> {
@@ -105,11 +111,17 @@ class NewsActivity : AppCompatActivity(), NewsActivityPresenter.View, Navigation
                     recyclerView.adapter = NewsRecyclerAdapter(it, this)
                 })
 
+
+        newsActivityPresenter.resume()
+
     }
 
     private fun initUIElements() {
         progressBar = findViewById(R.id.new_activity_progress_bar)
         recyclerView = findViewById(R.id.news_recycler_view)
+        swipeToRefreshLayout = findViewById(R.id.pullToRefresh)
+        swipeToRefreshLayout.setOnRefreshListener(this)
+
     }
 
     private fun setupNavigationDrawer() {
@@ -125,39 +137,37 @@ class NewsActivity : AppCompatActivity(), NewsActivityPresenter.View, Navigation
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        var category = ""
         when (item.itemId) {
             R.id.nav_business -> {
-                category = "business"
+                selectedCategory = "business"
             }
             R.id.nav_entertainment -> {
-                category = "entertainment"
+                selectedCategory = "entertainment"
             }
             R.id.nav_general -> {
-                category = "general"
+                selectedCategory = "general"
             }
             R.id.nav_health -> {
-                category = "health"
+                selectedCategory = "health"
             }
             R.id.nav_science -> {
-                category = "science"
+                selectedCategory = "science"
             }
             R.id.nav_sports -> {
-                category = "sports"
+                selectedCategory = "sports"
             }
             R.id.nav_technology -> {
-                category = "technology"
+                selectedCategory = "technology"
             }
         }
 
-        newsActivityPresenter.changeArticles(category)
+        newsActivityPresenter.changeArticles(selectedCategory)
         drawer_layout.closeDrawer(GravityCompat.START)
         return true
     }
 
-    override fun onResume() {
-        super.onResume()
-        newsActivityPresenter.resume()
+    override fun onRefresh() {
+        swipeToRefreshLayout.isRefreshing = false
+        newsActivityPresenter.getNewsHeadlines(selectedCategory, true)
     }
-
 }

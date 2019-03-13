@@ -15,10 +15,12 @@ interface NewsRepository {
     /**
      * Method to fetch the headlines data with category
     * */
-    fun getNewsHeadlines(country:String, category:String): Observable<TopHeadlinesResponse>
+    fun getNewsHeadlines(country: String, category: String, refreshLocal: Boolean): Observable<TopHeadlinesResponse>
 
     /**
      * Method to save the headlines data in local memory
      * */
     fun saveNewsHeadlines(newsArticle: Observable<TopHeadlinesResponse>)
+
+
 }

@@ -7,7 +7,6 @@ import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
 
 class LocalNewsRepository(private val fileManager: FileManager) : NewsRepository {
-
     /**
      * Saves the news data into local storage
      * Uses RxJava to delegate the file writing operation to IO thread,
@@ -25,7 +24,8 @@ class LocalNewsRepository(private val fileManager: FileManager) : NewsRepository
     /**
      * Returns an observable which contains the data fetched from the file
      * */
-    override fun getNewsHeadlines(country: String, category: String): Observable<TopHeadlinesResponse> {
+    override fun getNewsHeadlines(country: String, category: String, refreshLocal: Boolean): Observable<TopHeadlinesResponse> {
+        // local repository will ignore the refreshLocal flag
         return Observable.just(fileManager.getObjectFromFile())
     }
 

@@ -15,4 +15,6 @@ interface NewsActivityPresenter : BasePresenter {
         fun showUI()
         fun hideUI()
     }
+
+    fun getNewsHeadlines(category: String, refresh:Boolean)
 }

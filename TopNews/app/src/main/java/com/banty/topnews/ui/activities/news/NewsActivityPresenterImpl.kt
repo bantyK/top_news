@@ -17,7 +17,7 @@ class NewsActivityPresenterImpl(
 ) : NewsActivityPresenter {
 
     override fun changeArticles(category: String) {
-        getNewsHeadlines(category)
+        getNewsHeadlines(category, true)
     }
 
     override fun handleNewsItemClicked(newsArticle: Article?) {
@@ -28,12 +28,12 @@ class NewsActivityPresenterImpl(
 
     override fun resume() {
         // show general news headlines on app start
-        getNewsHeadlines("general")
+        getNewsHeadlines("general", false)
     }
 
-    private fun getNewsHeadlines(category: String) {
+    override fun getNewsHeadlines(category: String, refresh: Boolean) {
         view.hideUI()
-        newsRepository.getNewsHeadlines("in", category)
+        newsRepository.getNewsHeadlines("in", category, refresh)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ response ->

@@ -14,20 +14,29 @@ class NewsRepositoryImpl(
     private val remoteNewsRepository: RemoteNewsRepository,
     private val networkUtil: NetworkConnectivityUtil
 ) : NewsRepository {
-    override fun getNewsHeadlines(country: String, category: String): Observable<TopHeadlinesResponse> {
-        return if (networkUtil.isNetworkAvailable()) {
-            // fetch the data from server
-            val newsHeadlines = remoteNewsRepository.getNewsHeadlines(country, category)
-            // save the data in local storage for offline use
-            saveNewsHeadlines(newsHeadlines)
-            // returns the data
-            newsHeadlines
+
+    override fun getNewsHeadlines(country: String, category: String, refreshLocal: Boolean): Observable<TopHeadlinesResponse> {
+        return if(refreshLocal) {
+            refreshHeadlines(country, category)
         } else {
-            localNewsRepository.getNewsHeadlines(country, category)
+            localNewsRepository.getNewsHeadlines(country, category, false)
         }
     }
 
     override fun saveNewsHeadlines(newsArticle: Observable<TopHeadlinesResponse>) {
         localNewsRepository.saveNewsHeadlines(newsArticle)
+    }
+
+    fun refreshHeadlines(country : String, category: String): Observable<TopHeadlinesResponse> {
+        return if(networkUtil.isNetworkAvailable()) {
+            // fetch new data from server
+            val newsHeadlines = remoteNewsRepository.getNewsHeadlines(country, category, true)
+            // save the data in local storage for offline use
+            saveNewsHeadlines(newsHeadlines)
+
+            newsHeadlines
+        } else {
+            localNewsRepository.getNewsHeadlines(country, category, false)
+        }
     }
 }
