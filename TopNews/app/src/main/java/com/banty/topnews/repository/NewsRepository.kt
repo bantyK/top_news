@@ -13,7 +13,7 @@ import io.reactivex.Observable
 interface NewsRepository {
 
     /**
-     * Method to fetch the headlines data
+     * Method to fetch the headlines data with category
     * */
     fun getNewsHeadlines(country:String, category:String): Observable<TopHeadlinesResponse>
 

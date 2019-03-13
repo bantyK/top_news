@@ -12,6 +12,8 @@ import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
 import android.util.Log
 import android.view.MenuItem
+import android.view.View
+import android.widget.ProgressBar
 import com.banty.topnews.R
 import com.banty.topnews.datamodels.Article
 import com.banty.topnews.di.component.DaggerNewsActivityComponent
@@ -25,17 +27,33 @@ import kotlinx.android.synthetic.main.app_bar_news.*
 import javax.inject.Inject
 
 class NewsActivity : AppCompatActivity(), NewsActivityPresenter.View, NavigationView.OnNavigationItemSelectedListener, ItemClickListener {
+
+    val TAG = "NewsActivity"
+
+    lateinit var recyclerView: RecyclerView
+
+    lateinit var progressBar:ProgressBar
+
+    override fun showUI() {
+        progressBar.visibility = View.GONE
+        recyclerView.visibility = View.VISIBLE
+    }
+
+    override fun hideUI() {
+        progressBar.visibility = View.VISIBLE
+        recyclerView.visibility = View.GONE
+    }
+
     override fun startWebViewActivity(url: String?) {
         val intent = Intent(this, WebviewActivity::class.java)
         intent.putExtra(WebviewActivity.INTENT_KEY_NEWS_ARTICLE_URL, url)
         startActivity(intent)
     }
 
-    val TAG = "NewsActivity"
+
 
     override fun setRecyclerView(articles: List<Article>?) {
         Log.d(TAG, "Article list size : ${articles?.size}")
-        val recyclerView = findViewById<RecyclerView>(R.id.news_recycler_view)
         recyclerView.setHasFixedSize(true)
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = NewsRecyclerAdapter(articles, this)
@@ -58,6 +76,7 @@ class NewsActivity : AppCompatActivity(), NewsActivityPresenter.View, Navigation
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_news)
+        initUIElements()
         setSupportActionBar(toolbar)
         setupNavigationDrawer()
 
@@ -74,6 +93,11 @@ class NewsActivity : AppCompatActivity(), NewsActivityPresenter.View, Navigation
 
     }
 
+    private fun initUIElements() {
+        progressBar = findViewById(R.id.new_activity_progress_bar)
+        recyclerView = findViewById(R.id.news_recycler_view)
+    }
+
     private fun setupNavigationDrawer() {
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
         val navView: NavigationView = findViewById(R.id.nav_view)
@@ -87,6 +111,13 @@ class NewsActivity : AppCompatActivity(), NewsActivityPresenter.View, Navigation
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
+
+        when(item.itemId) {
+            R.id.nav_business -> {
+                newsActivityPresenter.changeArticles("business")
+            }
+        }
+
         drawer_layout.closeDrawer(GravityCompat.START)
         return true
     }

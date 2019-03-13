@@ -3,35 +3,39 @@
       xmlns:tools="http://schemas.android.com/tools"
       tools:showIn="navigation_view">
 
-    <group android:checkableBehavior="single">
-        <item
-                android:id="@+id/nav_camera"
-                android:icon="@drawable/ic_launcher_background"
-                android:title="Import"/>
-        <item
-                android:id="@+id/nav_gallery"
-                android:icon="@drawable/ic_launcher_background"
-                android:title="Gallery"/>
-        <item
-                android:id="@+id/nav_slideshow"
-                android:icon="@drawable/ic_launcher_background"
-                android:title="Slideshow"/>
-        <item
-                android:id="@+id/nav_manage"
-                android:icon="@drawable/ic_launcher_background"
-                android:title="Tools"/>
-    </group>
-
-    <item android:title="Communicate">
+    <item android:title="@string/categories">
         <menu>
             <item
-                    android:id="@+id/nav_share"
+                    android:id="@+id/nav_business"
                     android:icon="@drawable/ic_launcher_background"
-                    android:title="Share"/>
+                    android:title="@string/business"/>
             <item
-                    android:id="@+id/nav_send"
+                    android:id="@+id/nav_entertainment"
                     android:icon="@drawable/ic_launcher_background"
-                    android:title="Send"/>
+                    android:title="@string/entertainment"/>
+            <item
+                    android:id="@+id/nav_general"
+                    android:icon="@drawable/ic_launcher_background"
+                    android:title="@string/general"/>
+            <item
+                    android:id="@+id/nav_health"
+                    android:icon="@drawable/ic_launcher_background"
+                    android:title="@string/health"/>
+
+            <item
+                    android:id="@+id/nav_science"
+                    android:icon="@drawable/ic_launcher_background"
+                    android:title="@string/science"/>
+
+            <item
+                    android:id="@+id/nav_sports"
+                    android:icon="@drawable/ic_launcher_background"
+                    android:title="@string/sports"/>
+
+            <item
+                    android:id="@+id/nav_technology"
+                    android:icon="@drawable/ic_launcher_background"
+                    android:title="@string/technology"/>
         </menu>
     </item>
 

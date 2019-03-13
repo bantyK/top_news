@@ -27,6 +27,9 @@ class WebviewActivity : AppCompatActivity() {
     private fun loadNewsPage(intent: Intent?) {
         if(intent != null && intent.extras != null && intent.extras.containsKey(INTENT_KEY_NEWS_ARTICLE_URL)) {
             webView.loadUrl(intent.getStringExtra(INTENT_KEY_NEWS_ARTICLE_URL))
+        } else {
+            // no url to load so finish this activity and go back to previous one.
+            finish()
         }
     }
 

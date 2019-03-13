@@ -14,6 +14,10 @@ class NewsActivityPresenterImpl(
     private val newsRepository: NewsRepository
 ) : NewsActivityPresenter {
 
+    override fun changeArticles(category: String) {
+        getNewsHeadlines(category)
+    }
+
     override fun handleNewsItemClicked(newsArticle: Article?) {
         view.startWebViewActivity(newsArticle?.url)
     }
@@ -21,18 +25,24 @@ class NewsActivityPresenterImpl(
     val TAG = "NewsActivityPresenter"
 
     override fun resume() {
-        newsRepository.getNewsHeadlines("in", "sports")
+        // show general news headlines on app start
+        getNewsHeadlines("")
+    }
+
+    private fun getNewsHeadlines(category: String) {
+        view.hideUI()
+        newsRepository.getNewsHeadlines("in", category)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ response ->
                 response.articles?.apply {
-                    Log.d(TAG, "News articles size : ${response.articles.size}")
+                    Log.d(TAG, "News articles size : ${response?.articles.size}")
+                    view.showUI()
                     view.setRecyclerView(response.articles)
                 }
             }, { error ->
                 Log.d(TAG, "Error : ${error.message}")
             })
-
     }
 
     override fun pause() {
