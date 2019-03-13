@@ -1,6 +1,7 @@
 package com.banty.topnews.ui.activities.news
 
 import android.util.Log
+import com.banty.topnews.datamodels.Article
 import com.banty.topnews.repository.NewsRepository
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -12,6 +13,10 @@ class NewsActivityPresenterImpl(
     private val view: NewsActivityPresenter.View,
     private val newsRepository: NewsRepository
 ) : NewsActivityPresenter {
+
+    override fun handleNewsItemClicked(newsArticle: Article?) {
+        view.startWebViewActivity(newsArticle?.url)
+    }
 
     val TAG = "NewsActivityPresenter"
 

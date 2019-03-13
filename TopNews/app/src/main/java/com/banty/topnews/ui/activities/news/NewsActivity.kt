@@ -1,5 +1,6 @@
 package com.banty.topnews.ui.activities.news
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
@@ -16,12 +17,19 @@ import com.banty.topnews.datamodels.Article
 import com.banty.topnews.di.component.DaggerNewsActivityComponent
 import com.banty.topnews.di.module.RepositoryModule
 import com.banty.topnews.repository.NewsRepository
+import com.banty.topnews.ui.activities.news.recyclerview.ItemClickListener
 import com.banty.topnews.ui.activities.news.recyclerview.NewsRecyclerAdapter
+import com.banty.topnews.ui.activities.webview.WebviewActivity
 import kotlinx.android.synthetic.main.activity_news.*
 import kotlinx.android.synthetic.main.app_bar_news.*
 import javax.inject.Inject
 
-class NewsActivity : AppCompatActivity(), NewsActivityPresenter.View, NavigationView.OnNavigationItemSelectedListener {
+class NewsActivity : AppCompatActivity(), NewsActivityPresenter.View, NavigationView.OnNavigationItemSelectedListener, ItemClickListener {
+    override fun startWebViewActivity(url: String?) {
+        val intent = Intent(this, WebviewActivity::class.java)
+        intent.putExtra(WebviewActivity.INTENT_KEY_NEWS_ARTICLE_URL, url)
+        startActivity(intent)
+    }
 
     val TAG = "NewsActivity"
 
@@ -30,7 +38,11 @@ class NewsActivity : AppCompatActivity(), NewsActivityPresenter.View, Navigation
         val recyclerView = findViewById<RecyclerView>(R.id.news_recycler_view)
         recyclerView.setHasFixedSize(true)
         recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.adapter = NewsRecyclerAdapter(articles)
+        recyclerView.adapter = NewsRecyclerAdapter(articles, this)
+    }
+
+    override fun listItemClicked(newsArticle: Article?) {
+        newsActivityPresenter.handleNewsItemClicked(newsArticle)
     }
 
     companion object {

@@ -11,7 +11,10 @@ import com.bumptech.glide.Glide
 /**
  * Created by Banty on 12/03/19.
  */
-class NewsRecyclerAdapter constructor(private val articles: List<Article>?) : RecyclerView.Adapter<NewsViewHolder>() {
+class NewsRecyclerAdapter constructor(private val articles: List<Article>?, private val itemClickListener: ItemClickListener) : RecyclerView.Adapter<NewsViewHolder>() {
+
+
+
     override fun onCreateViewHolder(parent: ViewGroup, position: Int): NewsViewHolder {
         val layoutInflater = parent.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         val view = layoutInflater.inflate(R.layout.single_news_list_item, parent, false)
@@ -34,7 +37,9 @@ class NewsRecyclerAdapter constructor(private val articles: List<Article>?) : Re
             .centerCrop()
             .placeholder(R.drawable.default_image)
             .into(viewHolder.newsThumbnail)
-    }
 
+        viewHolder.parentView.setOnClickListener { itemClickListener.listItemClicked(newsArticle) }
+
+    }
 
 }
