@@ -26,7 +26,7 @@ class NewsRepoImpl(private val localNewsRepo: NewsRepository, private val remote
             fetchNewsFromRemoteDataSource(category, callback)
         } else {
             // cache is not expired, try to fetch the locally saved news articles.
-            Log.d(TAG, "Fetching local data")
+//            Log.d(TAG, "Fetching local data")
             localNewsRepo.getNewsArticles(category, object : NewsRepository.LoadNewsCallback {
                 override fun onNewsLoaded(articles: List<Article>) {
                     // articles found in local storage, return them
@@ -46,8 +46,12 @@ class NewsRepoImpl(private val localNewsRepo: NewsRepository, private val remote
      * This method calls the remote server to fetch news articles from newsAPI and update the cache
      * */
     private fun fetchNewsFromRemoteDataSource(category: String, callback: NewsRepository.LoadNewsCallback) {
-        Log.d(TAG, "Fetching data from server")
-        remoteNewsRepo.getNewsArticles(category, object : NewsRepository.LoadNewsCallback {
+//        Log.d(TAG, "Fetching data from server")
+        remoteNewsRepo.getNewsArticles(category, loadNewsCallback(callback))
+    }
+
+    private fun loadNewsCallback(callback: NewsRepository.LoadNewsCallback): NewsRepository.LoadNewsCallback {
+        return object : NewsRepository.LoadNewsCallback {
             override fun onNewsLoaded(articles: List<Article>) {
                 // data is fetched, update the local cache.
                 saveNewsArticles(articles)
@@ -59,7 +63,7 @@ class NewsRepoImpl(private val localNewsRepo: NewsRepository, private val remote
                 callback.onNewsFailedToLoad()
             }
 
-        })
+        }
     }
 
     /**

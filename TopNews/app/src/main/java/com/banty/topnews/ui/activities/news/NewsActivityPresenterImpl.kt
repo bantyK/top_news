@@ -45,14 +45,14 @@ class NewsActivityPresenterImpl(
     }
 
     override fun pause() {
-
+        // implementation not required
     }
 
     override fun stop() {
-
+        // implementation not required
     }
 
     override fun destroy() {
-
+        // implementation not required
     }
 }
