@@ -1,5 +1,6 @@
 package com.banty.topnews.repository
 
+import android.util.Log
 import com.banty.topnews.datamodels.Article
 
 /**
@@ -7,9 +8,6 @@ import com.banty.topnews.datamodels.Article
  */
 class NewsRepoImpl(private val localNewsRepo: NewsRepository, private val remoteNewsRepo: NewsRepository) :
     NewsRepository {
-
-    private val TAG = "NewsRepo"
-
 
     // this represent the state of cache in local storage.
     // will be updated if fresh data from server needs to be fetched
@@ -25,7 +23,6 @@ class NewsRepoImpl(private val localNewsRepo: NewsRepository, private val remote
             fetchNewsFromRemoteDataSource(country, category, callback)
         } else {
             // cache is not expired, try to fetch the locally saved news articles.
-//            Log.d(TAG, "Fetching local data")
             localNewsRepo.getNewsArticles(country, category, object : NewsRepository.LoadNewsCallback {
                 override fun onNewsLoaded(articles: List<Article>) {
                     // articles found in local storage, return them
@@ -49,7 +46,6 @@ class NewsRepoImpl(private val localNewsRepo: NewsRepository, private val remote
         category: String,
         callback: NewsRepository.LoadNewsCallback
     ) {
-//        Log.d(TAG, "Fetching data from server")
         remoteNewsRepo.getNewsArticles(country, category, loadNewsCallback(callback))
     }
 

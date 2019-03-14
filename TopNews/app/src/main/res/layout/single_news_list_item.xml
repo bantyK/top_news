@@ -1,53 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout
-        android:id="@+id/parent_view"
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/parent_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
-        android:layout_marginTop="5dp">
+        android:layout_marginBottom="@dimen/dimen_5DP"
+        android:layout_marginTop="@dimen/dimen_5DP">
 
     <TextView
             android:id="@+id/news_title"
-            android:layout_width="0dp"
+            android:layout_width="@dimen/dimen_0DP"
             app:layout_constraintWidth_default="percent"
             app:layout_constraintWidth_percent=".7"
             android:layout_height="wrap_content"
             android:textAppearance="?android:textAppearanceLarge"
-            android:textSize="16sp"
+            android:textSize="@dimen/dimen_16SP"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="20dp"
-            />
+            android:layout_marginStart="@dimen/dimen_10DP"
+            android:layout_marginEnd="@dimen/dimen_20DP"
+            android:textColor="#FFF"
+    />
 
     <ImageView
             android:id="@+id/news_thumb"
-            android:layout_width="0dp"
+            android:layout_width="@dimen/dimen_0DP"
             app:layout_constraintWidth_default="percent"
             app:layout_constraintWidth_percent=".25"
-            android:layout_height="100dp"
+            android:layout_height="@dimen/dimen_100DP"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintLeft_toRightOf="@id/news_title"
-            android:layout_marginEnd="10dp"
+            android:layout_marginEnd="@dimen/dimen_10DP"
             app:layout_constraintTop_toTopOf="parent"
             android:contentDescription="@string/news_thumb_content_desc"/>
 
     <TextView
             android:id="@+id/news_content"
-            android:layout_width="0dp"
+            android:layout_width="@dimen/dimen_0DP"
             app:layout_constraintWidth_default="percent"
             app:layout_constraintWidth_percent=".7"
             android:layout_height="wrap_content"
             android:singleLine="true"
             android:textAppearance="?android:textAppearanceLarge"
-            android:textSize="12sp"
-            android:layout_marginTop="12dp"
-            android:layout_marginStart="10dp"
+            android:textSize="@dimen/dimen_12SP"
+            android:textColor="#FFF"
+            android:layout_marginTop="@dimen/dimen_12DP"
+            android:layout_marginStart="@dimen/dimen_10DP"
             app:layout_constraintTop_toBottomOf="@id/news_title"
             app:layout_constraintLeft_toLeftOf="parent"
-            android:layout_marginEnd="16dp"/>
+            android:layout_marginEnd="@dimen/dimen_16DP"/>
 
     <TextView
             android:id="@+id/news_source"
@@ -55,12 +57,13 @@
             android:layout_height="wrap_content"
             android:singleLine="true"
             android:textAppearance="?android:textAppearanceLarge"
-            android:textSize="12sp"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="8dp"
+            android:textSize="@dimen/dimen_12SP"
+            android:layout_marginStart="@dimen/dimen_10DP"
+            android:textColor="#FFF"
+            android:layout_marginTop="@dimen/dimen_8DP"
             app:layout_constraintTop_toBottomOf="@id/news_content"
             app:layout_constraintLeft_toLeftOf="parent"
-            android:layout_marginEnd="16dp"/>
+            android:layout_marginEnd="@dimen/dimen_16DP"/>
 
     <TextView
             android:id="@+id/news_duration"
@@ -68,17 +71,18 @@
             android:layout_height="wrap_content"
             android:singleLine="true"
             android:textAppearance="?android:textAppearanceLarge"
-            android:textSize="12sp"
-            android:layout_marginTop="8dp"
+            android:textSize="@dimen/dimen_12SP"
+            android:layout_marginTop="@dimen/dimen_8DP"
+            android:textColor="#FFF"
             app:layout_constraintTop_toBottomOf="@id/news_content"
             app:layout_constraintRight_toRightOf="@id/news_title"
-            android:layout_marginEnd="16dp"/>
+            android:layout_marginEnd="@dimen/dimen_16DP"/>
 
     <View
             android:layout_width="match_parent"
-            android:layout_height="2dp"
+            android:layout_height="@dimen/dimen_2DP"
             android:background="#C0C0C0"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="@dimen/dimen_10DP"
             app:layout_constraintTop_toBottomOf="@id/news_duration"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"

@@ -141,8 +141,9 @@ class NewsActivity : AppCompatActivity(), NewsActivityPresenter.View, Navigation
             selectedCountry
         )
 
+        // on orientation change, the app will not call the remote server, instead it will fetch the locally
+        // saved data.
         newsActivityPresenter.resume()
-
     }
 
     private fun saveCountryChooserShown(selectedCountry: String) {
@@ -244,7 +245,7 @@ class NewsActivity : AppCompatActivity(), NewsActivityPresenter.View, Navigation
     private fun showCountryChooserDialog() {
         val alertDialogBuilder = AlertDialog.Builder(this)
         val view = layoutInflater.inflate(R.layout.layout_spinner_dialog, null)
-        alertDialogBuilder.setTitle(getString(R.string.spinner_dialog_title))
+        alertDialogBuilder.setMessage(getString(R.string.spinner_dialog_message))
         val spinner = view.findViewById<Spinner>(R.id.country_chooser_spinner)
         val adapter: ArrayAdapter<String> = ArrayAdapter(
             this,

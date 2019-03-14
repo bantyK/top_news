@@ -4,4 +4,16 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="nav_header_vertical_spacing">8dp</dimen>
+    <dimen name="dimen_50DP">50dp</dimen>
+    <dimen name="dimen_10DP">10dp</dimen>
+    <dimen name="dimen_2DP">2dp</dimen>
+    <dimen name="dimen_8DP">8dp</dimen>
+    <dimen name="dimen_12SP">12sp</dimen>
+    <dimen name="dimen_16DP">16dp</dimen>
+    <dimen name="dimen_12DP">12dp</dimen>
+    <dimen name="dimen_0DP">0dp</dimen>
+    <dimen name="dimen_100DP">100dp</dimen>
+    <dimen name="dimen_20DP">20dp</dimen>
+    <dimen name="dimen_16SP">16sp</dimen>
+    <dimen name="dimen_5DP">5dp</dimen>
 </resources>

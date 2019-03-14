@@ -136,5 +136,6 @@
     <string name="spinner_dialog_title">Select country</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
+    <string name="spinner_dialog_message">Select a country to read its headlines</string>
 
 </resources>
