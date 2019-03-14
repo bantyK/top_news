@@ -28,14 +28,17 @@ class NewsRepoImplTest {
     @Captor
     lateinit var newsLoadCallbackArgumentCaptor: ArgumentCaptor<NewsRepository.LoadNewsCallback>
 
-    fun <T> capture(argumentCaptor: ArgumentCaptor<T>): T = argumentCaptor.capture()
+
+    /**
+     * Returns ArgumentCaptor.capture() as nullable type to avoid java.lang.IllegalStateException
+     * when null is returned.
+     */
+    private fun <T> capture(argumentCaptor: ArgumentCaptor<T>): T = argumentCaptor.capture()
 
     /**
      * Returns Mockito.any() as nullable type to avoid java.lang.IllegalStateException when
      * null is returned.
      */
-    fun <T> any(): T = Mockito.any<T>()
-
     private fun <T> anyObject(): T {
         return Mockito.anyObject<T>()
     }
@@ -69,8 +72,7 @@ class NewsRepoImplTest {
         newsRepo.getNewsArticles("", mockLoadNewsCallback)
         val articles = arrayListOf<Article>()
 
-        Mockito.verify(localNewsRepo)
-            .getNewsArticles(ArgumentMatchers.anyString(), capture(newsLoadCallbackArgumentCaptor))
+        Mockito.verify(localNewsRepo).getNewsArticles(ArgumentMatchers.anyString(), capture(newsLoadCallbackArgumentCaptor))
 
         newsLoadCallbackArgumentCaptor.value.onNewsLoaded(articles)
 
