@@ -38,6 +38,14 @@ import kotlinx.android.synthetic.main.app_bar_news.*
 import javax.inject.Inject
 
 
+/**
+ * Activity which displays the list of news headlines in a recycler view. Displays the Source and the published date also
+ *
+ * Uses the MVP with repository patterns to fetch and display the list of news headlines.
+ *
+ * Opens a webview with the complete news story when a news headline is clicked.
+ * */
+
 class NewsActivity : AppCompatActivity(), NewsActivityPresenter.View, NavigationView.OnNavigationItemSelectedListener,
     ItemClickListener, SwipeRefreshLayout.OnRefreshListener {
 
@@ -99,8 +107,11 @@ class NewsActivity : AppCompatActivity(), NewsActivityPresenter.View, Navigation
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_news)
+
         initUIElements()
+
         setSupportActionBar(toolbar)
+
         setupNavigationDrawer()
 
         // inject the dependencies
@@ -116,6 +127,37 @@ class NewsActivity : AppCompatActivity(), NewsActivityPresenter.View, Navigation
         /**
          * View model to update the recycler view with new data
          * */
+        observeNewsViewModel()
+
+        handleCountryChooser()
+
+        // initiate the presenter
+        initiatePresenter()
+
+        // on orientation change, the app will not call the remote server, instead it will fetch the locally
+        // saved data.
+        newsActivityPresenter.resume()
+    }
+
+    private fun initiatePresenter() {
+        newsActivityPresenter = NewsActivityPresenterImpl(
+            this,
+            newsRepository,
+            headlinesViewModel,
+            selectedCountry
+        )
+    }
+
+    private fun handleCountryChooser() {
+        if (!countryChooserShown()) {
+            showCountryChooserDialog()
+            saveCountryChooserShown(selectedCountry)
+        } else {
+            selectedCountry = SharedPrefUtils.getPref(this, Constants.SELECTED_COUNTRY, "in")
+        }
+    }
+
+    private fun observeNewsViewModel() {
         headlinesViewModel.getHeadlinesViewModel()
             .observe(this,
                 Observer<List<Article>> {
@@ -125,25 +167,6 @@ class NewsActivity : AppCompatActivity(), NewsActivityPresenter.View, Navigation
                     recyclerView.adapter = NewsRecyclerAdapter(it, this)
                     Toast.makeText(this, getString(R.string.pull_to_refresh_message), Toast.LENGTH_LONG).show()
                 })
-
-        if(!countryChooserShown()) {
-            showCountryChooserDialog()
-            saveCountryChooserShown(selectedCountry)
-        } else {
-            selectedCountry = SharedPrefUtils.getPref(this, Constants.SELECTED_COUNTRY, "in")
-        }
-
-        // initiate the presenter
-        newsActivityPresenter = NewsActivityPresenterImpl(
-            this,
-            newsRepository,
-            headlinesViewModel,
-            selectedCountry
-        )
-
-        // on orientation change, the app will not call the remote server, instead it will fetch the locally
-        // saved data.
-        newsActivityPresenter.resume()
     }
 
     private fun saveCountryChooserShown(selectedCountry: String) {

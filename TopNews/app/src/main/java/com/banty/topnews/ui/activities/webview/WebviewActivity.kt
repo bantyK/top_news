@@ -7,6 +7,10 @@ import android.support.v7.app.AppCompatActivity
 import android.webkit.*
 import com.banty.topnews.R
 
+/**
+ * This activity opens the news in a web view
+ * It gets the url to load from the NewsActivity as an intent keys
+* */
 class WebviewActivity : AppCompatActivity() {
 
     companion object {
@@ -24,6 +28,9 @@ class WebviewActivity : AppCompatActivity() {
         loadNewsPage(intent)
     }
 
+    /**
+     * Fetch the news url from @param intent and display in the webview
+     * */
     private fun loadNewsPage(intent: Intent?) {
         if(intent != null && intent.extras != null && intent.extras.containsKey(INTENT_KEY_NEWS_ARTICLE_URL)) {
             webView.loadUrl(intent.getStringExtra(INTENT_KEY_NEWS_ARTICLE_URL))
@@ -36,7 +43,7 @@ class WebviewActivity : AppCompatActivity() {
     @SuppressLint("SetJavaScriptEnabled")
     private fun setupWebview() {
         // set javascript and zoom and some other settings
-        webView = findViewById<WebView>(R.id.webView)
+        webView = findViewById(R.id.webView)
         val settings = webView.settings
         settings.setAppCacheEnabled(true)
         settings.databaseEnabled = true
@@ -49,8 +56,6 @@ class WebviewActivity : AppCompatActivity() {
         settings.builtInZoomControls = false
         settings.useWideViewPort = true
 
-        // 3RD party plugins (on older devices)
-        settings.pluginState = WebSettings.PluginState.ON
 
         webView.setInitialScale(100)
         webView.setBackgroundColor(resources.getColor(R.color.transparent_background))

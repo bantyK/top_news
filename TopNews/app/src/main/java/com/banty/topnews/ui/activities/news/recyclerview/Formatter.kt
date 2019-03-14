@@ -2,6 +2,8 @@ package com.banty.topnews.ui.activities.news.recyclerview
 
 /**
  * Created by Banty on 13/03/19.
+ *
+ * Contains helper method to format the data from API to show in the UI in user readable format.
  */
 
 

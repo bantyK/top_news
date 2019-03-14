@@ -39,17 +39,24 @@ class NewsRecyclerAdapter constructor(
      * Populate each item view with article data
      * */
     override fun onBindViewHolder(viewHolder: NewsViewHolder, position: Int) {
+        // get an article from the list and the position variable
         val newsArticle = articles?.get(position)
+
+        // populate the news articles data into UI
         viewHolder.titleTextView.text = stringFormatter.getFormattedNewsTitle(newsArticle?.title)
         viewHolder.contentTextView.text = newsArticle?.description
         viewHolder.sourceTextView.text = newsArticle?.source?.newsSourceName
         viewHolder.durationTextView.text = stringFormatter.getFormattedDuration(newsArticle?.date)
+
+        // use Glide to load the image and handle image caching
         Glide.with(viewHolder.newsThumbnail.context)
             .load(newsArticle?.imageUrl)
             .centerCrop()
             .placeholder(R.drawable.default_image)
             .into(viewHolder.newsThumbnail)
 
+        // click listener which makes the entire view clickable, send the article which was clicked
+        // to the listener.
         viewHolder.parentView.setOnClickListener { itemClickListener.listItemClicked(newsArticle) }
 
     }
