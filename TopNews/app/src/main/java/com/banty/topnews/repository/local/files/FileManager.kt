@@ -26,7 +26,7 @@ class FileManager constructor(private val applicationContext: Context) {
     fun saveArticlesToFile(articles: List<Article>) {
         try {
             // create a serializable object to write into the file
-            val dataToWrite = TopHeadlinesResponse("ok", articles?.size, articles)
+            val dataToWrite = TopHeadlinesResponse("ok", articles.size, articles)
             val fout = FileOutputStream("${applicationContext.filesDir}/$filePath")
             val oos = ObjectOutputStream(fout)
             oos.writeObject(dataToWrite)

@@ -73,7 +73,7 @@ class NewsRepoImpl(private val localNewsRepo: NewsRepository, private val remote
         localNewsRepo.saveNewsArticles(articles)
     }
 
-    /*
+    /**
     * This method is called when local data needs to be updated.
     * */
     override fun refreshNews() {

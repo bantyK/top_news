@@ -1,7 +1,6 @@
 package com.banty.topnews.di.component
 
 import com.banty.topnews.di.module.RepositoryModule
-import com.banty.topnews.ui.activities.main.MainActivity
 import com.banty.topnews.ui.activities.news.NewsActivity
 import dagger.Component
 import javax.inject.Singleton
