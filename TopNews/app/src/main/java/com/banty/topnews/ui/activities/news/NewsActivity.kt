@@ -58,6 +58,9 @@ class NewsActivity : AppCompatActivity(), NewsActivityPresenter.View, Navigation
         recyclerView.visibility = View.GONE
     }
 
+    /**
+     * Start the web activity with the url passed from presenter.
+     * */
     override fun startWebViewActivity(url: String?) {
         val intent = Intent(this, WebviewActivity::class.java)
         intent.putExtra(WebviewActivity.INTENT_KEY_NEWS_ARTICLE_URL, url)
@@ -65,6 +68,10 @@ class NewsActivity : AppCompatActivity(), NewsActivityPresenter.View, Navigation
     }
 
 
+    /**
+     * Callback from Recycler adapter when a list item is clicked.
+     * Delegated the processing to the presenter
+     * */
     override fun listItemClicked(newsArticle: Article?) {
         newsActivityPresenter.handleNewsItemClicked(newsArticle)
     }
@@ -86,14 +93,18 @@ class NewsActivity : AppCompatActivity(), NewsActivityPresenter.View, Navigation
         setSupportActionBar(toolbar)
         setupNavigationDrawer()
 
+        // inject the dependencies
         DaggerNewsActivityComponent
             .builder()
             .repositoryModule(RepositoryModule(this.applicationContext))
             .build()
             .injectNewsActivityDependencies(this)
 
+        // initiate the view model
         headlinesViewModel = ViewModelProviders.of(this).get(NewsViewModel::class.java)
 
+
+        // initiate the presenter
         newsActivityPresenter = NewsActivityPresenterImpl(
             this,
             newsRepository,
@@ -111,7 +122,6 @@ class NewsActivity : AppCompatActivity(), NewsActivityPresenter.View, Navigation
                     recyclerView.setHasFixedSize(true)
                     recyclerView.layoutManager = LinearLayoutManager(this)
                     recyclerView.adapter = NewsRecyclerAdapter(it, this)
-
                     Toast.makeText(this, getString(R.string.pull_to_refresh_message), Toast.LENGTH_LONG).show()
                 })
 
@@ -120,6 +130,9 @@ class NewsActivity : AppCompatActivity(), NewsActivityPresenter.View, Navigation
 
     }
 
+    /**
+     * Initialise the UI elements
+     * */
     private fun initUIElements() {
         progressBar = findViewById(R.id.new_activity_progress_bar)
         recyclerView = findViewById(R.id.news_recycler_view)
@@ -128,6 +141,9 @@ class NewsActivity : AppCompatActivity(), NewsActivityPresenter.View, Navigation
 
     }
 
+    /**
+     * Set up of side drawer
+     * */
     private fun setupNavigationDrawer() {
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
         val navView: NavigationView = findViewById(R.id.nav_view)
@@ -140,6 +156,10 @@ class NewsActivity : AppCompatActivity(), NewsActivityPresenter.View, Navigation
         navView.setNavigationItemSelectedListener(this)
     }
 
+    /**
+     * Item click listener of drawer items
+     * Sends the item data from drawer to the presenter and closes the drawer
+     * */
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.nav_business -> {
@@ -170,6 +190,11 @@ class NewsActivity : AppCompatActivity(), NewsActivityPresenter.View, Navigation
         return true
     }
 
+    /**
+     * SwipeRefreshLayout's listener. Gets called when user swipe down on the recycler view to update the view
+     *
+     * Informs the presenter to update the local cache and update the UI
+     * */
     override fun onRefresh() {
         swipeToRefreshLayout.isRefreshing = false
         newsActivityPresenter.getNewsHeadlines(selectedCategory, true)
@@ -190,6 +215,10 @@ class NewsActivity : AppCompatActivity(), NewsActivityPresenter.View, Navigation
         }
     }
 
+
+    /**
+     * Shows an error message in the UI when data fetching fails.
+     * */
     override fun showDataFetchErrorMessage() {
         progressBar.visibility = View.GONE
         Toast.makeText(this, getString(R.string.news_fetch_error_message), Toast.LENGTH_LONG).show()
