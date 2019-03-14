@@ -11,10 +11,16 @@ import com.bumptech.glide.Glide
 /**
  * Created by Banty on 12/03/19.
  */
-class NewsRecyclerAdapter constructor(private val articles: List<Article>?, private val itemClickListener: ItemClickListener) : RecyclerView.Adapter<NewsViewHolder>() {
+class NewsRecyclerAdapter constructor(
+    private val articles: List<Article>?,
+    private val itemClickListener: ItemClickListener
+) : RecyclerView.Adapter<NewsViewHolder>() {
 
+    private val stringFormatter = Formatter()
 
-
+    /**
+     * Inflate the layout of a single item of recycler view
+     * */
     override fun onCreateViewHolder(parent: ViewGroup, position: Int): NewsViewHolder {
         val layoutInflater = parent.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         val view = layoutInflater.inflate(R.layout.single_news_list_item, parent, false)
@@ -22,16 +28,22 @@ class NewsRecyclerAdapter constructor(private val articles: List<Article>?, priv
 
     }
 
+    /**
+     * Return the count of items to be displayed
+    * */
     override fun getItemCount(): Int =
         articles?.size ?: 0
 
 
+    /**
+     * Populate each item view with article data
+     * */
     override fun onBindViewHolder(viewHolder: NewsViewHolder, position: Int) {
         val newsArticle = articles?.get(position)
-        viewHolder.titleTextView.text = getFormattedNewsTitle(newsArticle?.title)
+        viewHolder.titleTextView.text = stringFormatter.getFormattedNewsTitle(newsArticle?.title)
         viewHolder.contentTextView.text = newsArticle?.description
         viewHolder.sourceTextView.text = newsArticle?.source?.newsSourceName
-        viewHolder.durationTextView.text = getFormattedDuration(newsArticle?.date)
+        viewHolder.durationTextView.text = stringFormatter.getFormattedDuration(newsArticle?.date)
         Glide.with(viewHolder.newsThumbnail.context)
             .load(newsArticle?.imageUrl)
             .centerCrop()

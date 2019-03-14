@@ -46,13 +46,20 @@ class NewsActivity : AppCompatActivity(), NewsActivityPresenter.View, Navigation
 
     private lateinit var swipeToRefreshLayout: SwipeRefreshLayout
 
+    // by default the category is general
     private var selectedCategory = "general"
 
+    /**
+     * Make the recycler view visible and hide the progress bar
+    * */
     override fun showUI() {
         progressBar.visibility = View.GONE
         recyclerView.visibility = View.VISIBLE
     }
 
+    /**
+     * Hide the recycler view and make the progress bar visible
+     * */
     override fun hideUI() {
         progressBar.visibility = View.VISIBLE
         recyclerView.visibility = View.GONE
@@ -138,7 +145,6 @@ class NewsActivity : AppCompatActivity(), NewsActivityPresenter.View, Navigation
         recyclerView = findViewById(R.id.news_recycler_view)
         swipeToRefreshLayout = findViewById(R.id.pullToRefresh)
         swipeToRefreshLayout.setOnRefreshListener(this)
-
     }
 
     /**
