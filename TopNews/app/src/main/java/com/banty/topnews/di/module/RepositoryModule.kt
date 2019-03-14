@@ -10,7 +10,11 @@ import com.banty.topnews.repository.local.files.FileManager
 import com.banty.topnews.repository.remote.RemoteNewsRepo
 import dagger.Module
 import dagger.Provides
+import io.reactivex.Scheduler
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import retrofit2.Retrofit
+import javax.inject.Named
 import javax.inject.Singleton
 
 /**
@@ -39,8 +43,8 @@ class RepositoryModule(val context: Context) {
 
     @Provides
     @Singleton
-    fun provideRemoteNewsRepository(newsApiService: NewsApiService): RemoteNewsRepo {
-        return RemoteNewsRepo(newsApiService)
+    fun provideRemoteNewsRepository(newsApiService: NewsApiService, @Named("io") ioScheduler: Scheduler, @Named("mainthread") mainThreadScheduler: Scheduler): RemoteNewsRepo {
+        return RemoteNewsRepo(newsApiService, ioScheduler, mainThreadScheduler)
     }
 
     @Provides
@@ -59,5 +63,14 @@ class RepositoryModule(val context: Context) {
     @Singleton
     fun provideFileManager(): FileManager = FileManager(context.applicationContext)
 
+    @Provides @Named("io")
+    fun provideIOScheduler() : Scheduler {
+        return Schedulers.io()
+    }
+
+    @Provides @Named("mainthread")
+    fun provideAndroidScheduler() : Scheduler {
+        return AndroidSchedulers.mainThread()
+    }
 
 }

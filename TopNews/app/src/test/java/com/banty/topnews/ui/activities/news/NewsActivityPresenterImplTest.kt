@@ -52,24 +52,24 @@ class NewsActivityPresenterImplTest {
 
     @Test
     fun shouldHideUiWhenMakingCallToRepository() {
-        newsActivityPresenter.getNewsHeadlines("category", false)
+        newsActivityPresenter.getNewsHeadlines("in","category", false)
         Mockito.verify(mockView).hideUI()
     }
 
     @Test
     fun shouldRefreshRepositoryIfRefreshFlagIsTrue() {
-        newsActivityPresenter.getNewsHeadlines("category", true)
+        newsActivityPresenter.getNewsHeadlines("in","category", true)
         Mockito.verify(newsRepository).refreshNews()
     }
 
     @Test
     fun shouldUpdateViewModelOnDataFetch() {
-        newsActivityPresenter.getNewsHeadlines("category", true)
+        newsActivityPresenter.getNewsHeadlines("in","category", true)
 
         val articles = arrayListOf<Article>()
 
         Mockito.verify(newsRepository)
-            .getNewsArticles(ArgumentMatchers.anyString(), capture(newsLoadCallbackArgumentCaptor))
+            .getNewsArticles(ArgumentMatchers.anyString(),ArgumentMatchers.anyString(), capture(newsLoadCallbackArgumentCaptor))
 
         newsLoadCallbackArgumentCaptor.value.onNewsLoaded(articles)
 
@@ -78,12 +78,12 @@ class NewsActivityPresenterImplTest {
 
     @Test
     fun shouldUpdateViewOnDataFetch() {
-        newsActivityPresenter.getNewsHeadlines("category", true)
+        newsActivityPresenter.getNewsHeadlines("in","category", true)
 
         val articles = arrayListOf<Article>()
 
         Mockito.verify(newsRepository)
-            .getNewsArticles(ArgumentMatchers.anyString(), capture(newsLoadCallbackArgumentCaptor))
+            .getNewsArticles(ArgumentMatchers.anyString(),ArgumentMatchers.anyString(), capture(newsLoadCallbackArgumentCaptor))
 
         newsLoadCallbackArgumentCaptor.value.onNewsLoaded(articles)
 
@@ -92,10 +92,10 @@ class NewsActivityPresenterImplTest {
 
     @Test
     fun shouldShowErrorMessageWhenDataLoadFailed() {
-        newsActivityPresenter.getNewsHeadlines("category", true)
+        newsActivityPresenter.getNewsHeadlines("in","category", true)
 
         Mockito.verify(newsRepository)
-            .getNewsArticles(ArgumentMatchers.anyString(), capture(newsLoadCallbackArgumentCaptor))
+            .getNewsArticles(ArgumentMatchers.anyString(),ArgumentMatchers.anyString(), capture(newsLoadCallbackArgumentCaptor))
 
         newsLoadCallbackArgumentCaptor.value.onNewsFailedToLoad()
 
@@ -111,11 +111,11 @@ class NewsActivityPresenterImplTest {
 
     @Test
     fun shouldRefreshDataOnCallingChangeArticle() {
-        newsActivityPresenter.changeArticles("")
+        newsActivityPresenter.changeArticles("","")
 
         val articles = arrayListOf<Article>()
 
-        Mockito.verify(newsRepository).getNewsArticles(ArgumentMatchers.anyString(), capture(newsLoadCallbackArgumentCaptor))
+        Mockito.verify(newsRepository).getNewsArticles(ArgumentMatchers.anyString(),ArgumentMatchers.anyString(), capture(newsLoadCallbackArgumentCaptor))
 
         newsLoadCallbackArgumentCaptor.value.onNewsLoaded(articles)
 

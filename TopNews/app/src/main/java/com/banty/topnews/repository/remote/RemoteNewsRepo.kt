@@ -3,6 +3,7 @@ package com.banty.topnews.repository.remote
 import com.banty.topnews.datamodels.Article
 import com.banty.topnews.network.retrofit.NewsApiService
 import com.banty.topnews.repository.NewsRepository
+import io.reactivex.Scheduler
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
@@ -15,16 +16,20 @@ import io.reactivex.schedulers.Schedulers
 *
 * Uses RxJava to handle the threading
 * */
-class RemoteNewsRepo(private val newsApiService: NewsApiService) : NewsRepository {
+class RemoteNewsRepo(
+    private val newsApiService: NewsApiService,
+    private val ioSchedulers: Scheduler,
+    private val androidSchedulers: Scheduler
+    ) : NewsRepository {
+
     override fun getNewsArticles(country: String, category: String, callback: NewsRepository.LoadNewsCallback) {
         newsApiService.getTopHeadlines(country, category)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(ioSchedulers)
+            .observeOn(androidSchedulers)
             .subscribe({
                 if (it.articles == null || it.articles.isEmpty()) {
                     callback.onNewsFailedToLoad()
                 } else {
-                    saveNewsArticles(it.articles)
                     callback.onNewsLoaded(it.articles)
                 }
             }, {

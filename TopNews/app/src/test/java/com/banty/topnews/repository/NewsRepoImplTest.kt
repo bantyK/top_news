@@ -52,27 +52,27 @@ class NewsRepoImplTest {
 
     @Test
     fun shouldReturnDataFromLocalStorageIfCacheIsNotDirty() {
-        newsRepo.getNewsArticles("", mockLoadNewsCallback)
+        newsRepo.getNewsArticles("","", mockLoadNewsCallback)
 
-        verify(localNewsRepo).getNewsArticles(ArgumentMatchers.anyString(), anyObject())
+        verify(localNewsRepo).getNewsArticles(ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), anyObject())
         verifyNoMoreInteractions(remoteNewsRepo)
     }
 
     @Test
     fun shouldReturnDataFromRemoteRepoIfRefreshIsCalled() {
         newsRepo.refreshNews()
-        newsRepo.getNewsArticles("", mockLoadNewsCallback)
+        newsRepo.getNewsArticles("","", mockLoadNewsCallback)
 
-        verify(remoteNewsRepo).getNewsArticles(ArgumentMatchers.anyString(), anyObject())
+        verify(remoteNewsRepo).getNewsArticles(ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), anyObject())
         verifyNoMoreInteractions(localNewsRepo)
     }
 
     @Test
     fun shouldCallSuccessCallbackWithArticlesWhenDataFetchIsSuccessful() {
-        newsRepo.getNewsArticles("", mockLoadNewsCallback)
+        newsRepo.getNewsArticles("","", mockLoadNewsCallback)
         val articles = arrayListOf<Article>()
 
-        Mockito.verify(localNewsRepo).getNewsArticles(ArgumentMatchers.anyString(), capture(newsLoadCallbackArgumentCaptor))
+        Mockito.verify(localNewsRepo).getNewsArticles(ArgumentMatchers.anyString(),ArgumentMatchers.anyString(), capture(newsLoadCallbackArgumentCaptor))
 
         newsLoadCallbackArgumentCaptor.value.onNewsLoaded(articles)
 
@@ -83,10 +83,10 @@ class NewsRepoImplTest {
     fun shouldCallFailureCallbackWithArticlesWhenDataFetchFail() {
         newsRepo.refreshNews()
 
-        newsRepo.getNewsArticles("", mockLoadNewsCallback)
+        newsRepo.getNewsArticles("","", mockLoadNewsCallback)
 
         Mockito.verify(remoteNewsRepo)
-            .getNewsArticles(ArgumentMatchers.anyString(), capture(newsLoadCallbackArgumentCaptor))
+            .getNewsArticles(ArgumentMatchers.anyString(),ArgumentMatchers.anyString(), capture(newsLoadCallbackArgumentCaptor))
 
         newsLoadCallbackArgumentCaptor.value.onNewsFailedToLoad()
 
@@ -99,10 +99,10 @@ class NewsRepoImplTest {
 
         val articles = arrayListOf<Article>()
 
-        newsRepo.getNewsArticles("", mockLoadNewsCallback)
+        newsRepo.getNewsArticles("","", mockLoadNewsCallback)
 
         Mockito.verify(remoteNewsRepo)
-            .getNewsArticles(ArgumentMatchers.anyString(), capture(newsLoadCallbackArgumentCaptor))
+            .getNewsArticles(ArgumentMatchers.anyString(),ArgumentMatchers.anyString(), capture(newsLoadCallbackArgumentCaptor))
 
         newsLoadCallbackArgumentCaptor.value.onNewsLoaded(articles)
 
@@ -111,11 +111,11 @@ class NewsRepoImplTest {
 
     @Test
     fun shouldCallRemoteRepoIfLocalDataFetchFailed() {
-        newsRepo.getNewsArticles("", mockLoadNewsCallback)
-        Mockito.verify(localNewsRepo).getNewsArticles(ArgumentMatchers.anyString(), capture(newsLoadCallbackArgumentCaptor))
+        newsRepo.getNewsArticles("","", mockLoadNewsCallback)
+        Mockito.verify(localNewsRepo).getNewsArticles(ArgumentMatchers.anyString(),ArgumentMatchers.anyString(), capture(newsLoadCallbackArgumentCaptor))
 
         newsLoadCallbackArgumentCaptor.value.onNewsFailedToLoad()
 
-        Mockito.verify(remoteNewsRepo).getNewsArticles(ArgumentMatchers.anyString(), capture(newsLoadCallbackArgumentCaptor))
+        Mockito.verify(remoteNewsRepo).getNewsArticles(ArgumentMatchers.anyString(),ArgumentMatchers.anyString(), capture(newsLoadCallbackArgumentCaptor))
     }
 }
