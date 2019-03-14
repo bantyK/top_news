@@ -2,6 +2,8 @@ package com.banty.topnews.ui.activities.news
 
 import com.banty.topnews.datamodels.Article
 import com.banty.topnews.repository.NewsRepository
+import com.banty.topnews.ui.activities.constants.Constants
+import com.banty.topnews.utility.SharedPrefUtils
 import com.banty.topnews.viewmodel.NewsViewModel
 
 /**

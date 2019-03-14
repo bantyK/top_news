@@ -2,7 +2,6 @@ package com.banty.topnews.ui.activities.news
 
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
-import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.NavigationView
@@ -28,9 +27,11 @@ import com.banty.topnews.datamodels.Article
 import com.banty.topnews.di.component.DaggerNewsActivityComponent
 import com.banty.topnews.di.module.RepositoryModule
 import com.banty.topnews.repository.NewsRepository
+import com.banty.topnews.ui.activities.constants.Constants
 import com.banty.topnews.ui.activities.news.recyclerview.ItemClickListener
 import com.banty.topnews.ui.activities.news.recyclerview.NewsRecyclerAdapter
 import com.banty.topnews.ui.activities.webview.WebviewActivity
+import com.banty.topnews.utility.SharedPrefUtils
 import com.banty.topnews.viewmodel.NewsViewModel
 import kotlinx.android.synthetic.main.activity_news.*
 import kotlinx.android.synthetic.main.app_bar_news.*
@@ -90,11 +91,6 @@ class NewsActivity : AppCompatActivity(), NewsActivityPresenter.View, Navigation
         newsActivityPresenter.handleNewsItemClicked(newsArticle)
     }
 
-    companion object {
-        @JvmStatic
-        val INTENT_KEY_COUNTRY_ID = "intent.key.country.id"
-    }
-
     private lateinit var newsActivityPresenter: NewsActivityPresenter
 
     @Inject
@@ -117,15 +113,6 @@ class NewsActivity : AppCompatActivity(), NewsActivityPresenter.View, Navigation
         // initiate the view model
         headlinesViewModel = ViewModelProviders.of(this).get(NewsViewModel::class.java)
 
-
-        // initiate the presenter
-        newsActivityPresenter = NewsActivityPresenterImpl(
-            this,
-            newsRepository,
-            headlinesViewModel,
-            selectedCountry
-        )
-
         /**
          * View model to update the recycler view with new data
          * */
@@ -139,10 +126,34 @@ class NewsActivity : AppCompatActivity(), NewsActivityPresenter.View, Navigation
                     Toast.makeText(this, getString(R.string.pull_to_refresh_message), Toast.LENGTH_LONG).show()
                 })
 
+        if(!countryChooserShown()) {
+            showCountryChooserDialog()
+            saveCountryChooserShown(selectedCountry)
+        } else {
+            selectedCountry = SharedPrefUtils.getPref(this, Constants.SELECTED_COUNTRY, "in")
+        }
+
+        // initiate the presenter
+        newsActivityPresenter = NewsActivityPresenterImpl(
+            this,
+            newsRepository,
+            headlinesViewModel,
+            selectedCountry
+        )
 
         newsActivityPresenter.resume()
 
     }
+
+    private fun saveCountryChooserShown(selectedCountry: String) {
+        SharedPrefUtils.putPref(this, Constants.COUNTRY_SELECTION_DISPLAYED, true)
+        SharedPrefUtils.putPref(this, Constants.SELECTED_COUNTRY, selectedCountry)
+    }
+
+    private fun countryChooserShown(): Boolean {
+        return SharedPrefUtils.getPref(this, Constants.COUNTRY_SELECTION_DISPLAYED, false)
+    }
+
 
     /**
      * Initialise the UI elements
@@ -220,12 +231,12 @@ class NewsActivity : AppCompatActivity(), NewsActivityPresenter.View, Navigation
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
 
-        when (item.itemId) {
+        return when (item.itemId) {
             R.id.change_country_settings -> {
                 showCountryChooserDialog()
-                return true
+                true
             }
-            else -> return super.onOptionsItemSelected(item)
+            else -> super.onOptionsItemSelected(item)
         }
     }
 
@@ -248,6 +259,7 @@ class NewsActivity : AppCompatActivity(), NewsActivityPresenter.View, Navigation
             val selectedCountryCode = resources.getStringArray(R.array.country_codes)[spinner.selectedItemPosition]
             Log.d(TAG, "Selected country : $selectedCountryCode")
             selectedCountry = selectedCountryCode
+            saveCountryChooserShown(selectedCountry)
             newsActivityPresenter.handleCountrySelection(selectedCountryCode, selectedCategory)
             dialog.dismiss()
         }

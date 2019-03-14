@@ -7,6 +7,7 @@ class Constants {
     companion object {
 
         val SHARED_PREF_NAME = "SHARED_PREF_NAME"
-        val SHARED_PREF_KEY_COUNTRY = "shared.pref.key.country"
+        val COUNTRY_SELECTION_DISPLAYED = "key.country.selection"
+        val SELECTED_COUNTRY = "key.selected.country"
     }
 }
