@@ -3,12 +3,11 @@ package com.banty.topnews.di.module
 import android.content.Context
 import com.banty.topnews.network.retrofit.NewsApiService
 import com.banty.topnews.network.retrofit.RetrofitClientCreator
-import com.banty.topnews.network.util.NetworkConnectivityUtil
+import com.banty.topnews.repository.NewsRepoImpl
 import com.banty.topnews.repository.NewsRepository
-import com.banty.topnews.repository.NewsRepositoryImpl
-import com.banty.topnews.repository.local.LocalNewsRepository
+import com.banty.topnews.repository.local.LocalNewsRepo
 import com.banty.topnews.repository.local.files.FileManager
-import com.banty.topnews.repository.remote.RemoteNewsRepository
+import com.banty.topnews.repository.remote.RemoteNewsRepo
 import dagger.Module
 import dagger.Provides
 import retrofit2.Retrofit
@@ -23,27 +22,25 @@ class RepositoryModule(val context: Context) {
     @Provides
     @Singleton
     fun provideNewsRepository(
-        localNewsRepository: LocalNewsRepository,
-        remoteNewsRepository: RemoteNewsRepository,
-        networkConnectivityUtil: NetworkConnectivityUtil
+        localNewsRepository: LocalNewsRepo,
+        remoteNewsRepository: RemoteNewsRepo
     ): NewsRepository {
-        return NewsRepositoryImpl(
+        return NewsRepoImpl(
             localNewsRepository,
-            remoteNewsRepository,
-            networkConnectivityUtil
+            remoteNewsRepository
         )
     }
 
     @Provides
     @Singleton
-    fun provideLocalNewsRepository(fileManager: FileManager): LocalNewsRepository {
-        return LocalNewsRepository(fileManager)
+    fun provideLocalNewsRepository(fileManager: FileManager): LocalNewsRepo {
+        return LocalNewsRepo(fileManager)
     }
 
     @Provides
     @Singleton
-    fun provideRemoteNewsRepository(newsApiService: NewsApiService): RemoteNewsRepository {
-        return RemoteNewsRepository(newsApiService)
+    fun provideRemoteNewsRepository(newsApiService: NewsApiService): RemoteNewsRepo {
+        return RemoteNewsRepo(newsApiService)
     }
 
     @Provides
@@ -57,10 +54,6 @@ class RepositoryModule(val context: Context) {
     fun provideRetrofitClient(): Retrofit {
         return RetrofitClientCreator.createRetrofitClient()
     }
-
-    @Provides
-    @Singleton
-    fun provideNetworkUtil(): NetworkConnectivityUtil = NetworkConnectivityUtil(context)
 
     @Provides
     @Singleton

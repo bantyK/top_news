@@ -14,9 +14,11 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
 import android.util.Log
+import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.ProgressBar
+import android.widget.Toast
 import com.banty.topnews.R
 import com.banty.topnews.datamodels.Article
 import com.banty.topnews.di.component.DaggerNewsActivityComponent
@@ -25,7 +27,7 @@ import com.banty.topnews.repository.NewsRepository
 import com.banty.topnews.ui.activities.news.recyclerview.ItemClickListener
 import com.banty.topnews.ui.activities.news.recyclerview.NewsRecyclerAdapter
 import com.banty.topnews.ui.activities.webview.WebviewActivity
-import com.banty.topnews.viewmodel.HeadlinesViewModel
+import com.banty.topnews.viewmodel.NewsViewModel
 import kotlinx.android.synthetic.main.activity_news.*
 import kotlinx.android.synthetic.main.app_bar_news.*
 import javax.inject.Inject
@@ -40,7 +42,7 @@ class NewsActivity : AppCompatActivity(), NewsActivityPresenter.View, Navigation
 
     private lateinit var progressBar: ProgressBar
 
-    private lateinit var headlinesViewModel: HeadlinesViewModel
+    private lateinit var headlinesViewModel: NewsViewModel
 
     private lateinit var swipeToRefreshLayout: SwipeRefreshLayout
 
@@ -90,13 +92,13 @@ class NewsActivity : AppCompatActivity(), NewsActivityPresenter.View, Navigation
             .build()
             .injectNewsActivityDependencies(this)
 
-        headlinesViewModel = ViewModelProviders.of(this).get(HeadlinesViewModel::class.java)
+        headlinesViewModel = ViewModelProviders.of(this).get(NewsViewModel::class.java)
 
         newsActivityPresenter = NewsActivityPresenterImpl(
             this,
             newsRepository,
             headlinesViewModel,
-            intent.getStringExtra(INTENT_KEY_COUNTRY_ID)
+            "in"
         )
 
         /**
@@ -109,6 +111,8 @@ class NewsActivity : AppCompatActivity(), NewsActivityPresenter.View, Navigation
                     recyclerView.setHasFixedSize(true)
                     recyclerView.layoutManager = LinearLayoutManager(this)
                     recyclerView.adapter = NewsRecyclerAdapter(it, this)
+
+                    Toast.makeText(this, getString(R.string.pull_to_refresh_message), Toast.LENGTH_LONG).show()
                 })
 
 
@@ -170,4 +174,25 @@ class NewsActivity : AppCompatActivity(), NewsActivityPresenter.View, Navigation
         swipeToRefreshLayout.isRefreshing = false
         newsActivityPresenter.getNewsHeadlines(selectedCategory, true)
     }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.news_screen_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+
+        when (item.itemId) {
+            R.id.change_country_settings -> {
+                return true
+            }
+            else -> return super.onOptionsItemSelected(item)
+        }
+    }
+
+    override fun showDataFetchErrorMessage() {
+        progressBar.visibility = View.GONE
+        Toast.makeText(this, getString(R.string.news_fetch_error_message), Toast.LENGTH_LONG).show()
+    }
+
 }

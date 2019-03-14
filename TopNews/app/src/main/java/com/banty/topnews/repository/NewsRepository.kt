@@ -1,5 +1,6 @@
 package com.banty.topnews.repository
 
+import com.banty.topnews.datamodels.Article
 import com.banty.topnews.datamodels.TopHeadlinesResponse
 import io.reactivex.Observable
 
@@ -12,15 +13,15 @@ import io.reactivex.Observable
  */
 interface NewsRepository {
 
-    /**
-     * Method to fetch the headlines data with category
-    * */
-    fun getNewsHeadlines(country: String, category: String, refreshLocal: Boolean): Observable<TopHeadlinesResponse>
+    interface LoadNewsCallback {
+        fun onNewsLoaded(articles:List<Article>)
 
-    /**
-     * Method to save the headlines data in local memory
-     * */
-    fun saveNewsHeadlines(newsArticle: Observable<TopHeadlinesResponse>)
+        fun onNewsFailedToLoad()
+    }
 
+    fun getNewsArticles(category : String, callback: LoadNewsCallback)
 
+    fun saveNewsArticles(articles: List<Article>)
+
+    fun refreshNews()
 }

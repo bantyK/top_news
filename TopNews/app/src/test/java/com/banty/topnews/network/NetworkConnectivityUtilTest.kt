@@ -3,7 +3,6 @@ package com.banty.topnews.network
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
-import com.banty.topnews.network.util.NetworkConnectivityUtil
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Before

@@ -14,6 +14,7 @@ interface NewsActivityPresenter : BasePresenter {
         fun startWebViewActivity(url: String?)
         fun showUI()
         fun hideUI()
+        fun showDataFetchErrorMessage()
     }
 
     fun getNewsHeadlines(category: String, refresh:Boolean)

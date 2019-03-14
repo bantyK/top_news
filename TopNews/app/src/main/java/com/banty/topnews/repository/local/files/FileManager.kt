@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Parcel
 import android.support.annotation.Nullable
 import android.util.Log
+import com.banty.topnews.datamodels.Article
 import com.banty.topnews.datamodels.TopHeadlinesResponse
 import java.io.*
 
@@ -18,10 +19,14 @@ class FileManager constructor(private val applicationContext: Context) {
     private val filePath = "news.vlp"
 
     /*
-    * Saves the object in the file
+    * Performs the file write operation
+    * Saves the list of articles in the file
+    *
     * */
-    fun saveObjectToFile(dataToWrite: TopHeadlinesResponse?) {
+    fun saveArticlesToFile(articles: List<Article>) {
         try {
+            // create a serializable object to write into the file
+            val dataToWrite = TopHeadlinesResponse("ok", articles?.size, articles)
             val fout = FileOutputStream("${applicationContext.filesDir}/$filePath")
             val oos = ObjectOutputStream(fout)
             oos.writeObject(dataToWrite)
@@ -33,13 +38,14 @@ class FileManager constructor(private val applicationContext: Context) {
     }
 
     /*
-    * Returns the object from file.
-    * returns Empty class if file is not present or could not read
+    * Performs file read operation
+    * Returns the list of articles from file.
+    * Returns empty list if case of any exception
     * */
     @Nullable
-    fun getObjectFromFile(): TopHeadlinesResponse? {
+    fun getArticlesFromFile(): List<Article>? {
         Log.d(logTag, "read object:  $filePath")
-        var data: TopHeadlinesResponse
+        var data: TopHeadlinesResponse?
         try {
             val fin = FileInputStream("${applicationContext.filesDir}/$filePath")
             val ois = ObjectInputStream(fin)
@@ -51,7 +57,7 @@ class FileManager constructor(private val applicationContext: Context) {
             ex.printStackTrace()
         }
 
-        return data
+        return data?.articles
     }
 
 }

@@ -7,7 +7,7 @@ import com.banty.topnews.datamodels.Article
 /**
  * Created by Banty on 13/03/19.
  */
-class HeadlinesViewModel : ViewModel() {
+class NewsViewModel : ViewModel() {
 
     private var headlineViewModel : MutableLiveData<List<Article>> = MutableLiveData()
 
