@@ -8,7 +8,7 @@ import com.banty.topnews.ui.presenter.BasePresenter
  */
 interface NewsActivityPresenter : BasePresenter {
     fun handleNewsItemClicked(newsArticle: Article?)
-    fun changeArticles(category: String)
+    fun changeArticles(country: String, category: String)
 
     interface View {
         fun startWebViewActivity(url: String?)
@@ -17,5 +17,6 @@ interface NewsActivityPresenter : BasePresenter {
         fun showDataFetchErrorMessage()
     }
 
-    fun getNewsHeadlines(category: String, refresh:Boolean)
+    fun getNewsHeadlines(country:String, category: String, refresh:Boolean)
+    fun handleCountrySelection(selectedCountryCode: String, selectedCategory: String)
 }

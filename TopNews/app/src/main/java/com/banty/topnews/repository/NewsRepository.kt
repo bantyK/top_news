@@ -19,7 +19,7 @@ interface NewsRepository {
         fun onNewsFailedToLoad()
     }
 
-    fun getNewsArticles(category : String, callback: LoadNewsCallback)
+    fun getNewsArticles(country:String, category : String, callback: LoadNewsCallback)
 
     fun saveNewsArticles(articles: List<Article>)
 

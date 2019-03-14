@@ -14,12 +14,11 @@ class NewsActivityPresenterImpl(
     private val country: String
 ) : NewsActivityPresenter {
 
-
     /**
      * Called by View when user selects an option from the side drawer menu.
      * */
-    override fun changeArticles(category: String) {
-        getNewsHeadlines(category, true)
+    override fun changeArticles(country: String, category: String) {
+        getNewsHeadlines(country, category, true)
     }
 
     /**
@@ -31,17 +30,17 @@ class NewsActivityPresenterImpl(
 
     override fun resume() {
         // show general news headlines on app start
-        getNewsHeadlines("general", false)
+        getNewsHeadlines(country, "general", false)
     }
 
     /**
      * Get the data from the repository. @param refresh indicates whether repository should return the cached data or
      * fetch data from server
     * */
-    override fun getNewsHeadlines(category: String, refresh: Boolean) {
+    override fun getNewsHeadlines(country: String,category: String, refresh: Boolean) {
         view.hideUI()
         if (refresh) newsRepository.refreshNews()
-        newsRepository.getNewsArticles(category, object : NewsRepository.LoadNewsCallback {
+        newsRepository.getNewsArticles(country, category, object : NewsRepository.LoadNewsCallback {
             override fun onNewsLoaded(articles: List<Article>) {
                 view.showUI()
                 // update the view model when repository returns the data
@@ -53,6 +52,13 @@ class NewsActivityPresenterImpl(
                 view.showDataFetchErrorMessage()
             }
         })
+    }
+
+    /**
+     * Handle the country selection/change
+     * */
+    override fun handleCountrySelection(selectedCountryCode: String, selectedCategory:String) {
+        getNewsHeadlines(selectedCountryCode, selectedCategory, true)
     }
 
     override fun pause() {

@@ -13,7 +13,7 @@ class LocalNewsRepo(private val fileManager: FileManager) : NewsRepository {
      * Reads the news articles from file system and returns via the LoadNewsCallback.
      * calls onNewsFailedToLoad() if article list is empty
     * */
-    override fun getNewsArticles(category: String, callback: NewsRepository.LoadNewsCallback) {
+    override fun getNewsArticles(country:String, category: String, callback: NewsRepository.LoadNewsCallback) {
         val articlesFromFile = this.fileManager.getArticlesFromFile()
         if (articlesFromFile == null || articlesFromFile.isEmpty()) {
             callback.onNewsFailedToLoad()

@@ -133,5 +133,8 @@
     <string name="change_country">Change Country</string>
     <string name="news_fetch_error_message">Sorry, we cannot show news at the moment\nPlease check your network connectivity.</string>
     <string name="pull_to_refresh_message">Pull Down to refresh</string>
+    <string name="spinner_dialog_title">Select country</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
 
 </resources>

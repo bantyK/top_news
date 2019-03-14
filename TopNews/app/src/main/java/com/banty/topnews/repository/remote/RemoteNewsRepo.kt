@@ -16,18 +16,18 @@ import io.reactivex.schedulers.Schedulers
 * Uses RxJava to handle the threading
 * */
 class RemoteNewsRepo(private val newsApiService: NewsApiService) : NewsRepository {
-    override fun getNewsArticles(category: String, callback: NewsRepository.LoadNewsCallback) {
-        newsApiService.getTopHeadlines("in", category)
+    override fun getNewsArticles(country: String, category: String, callback: NewsRepository.LoadNewsCallback) {
+        newsApiService.getTopHeadlines(country, category)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe ({
-                if(it.articles == null || it.articles.isEmpty()) {
+            .subscribe({
+                if (it.articles == null || it.articles.isEmpty()) {
                     callback.onNewsFailedToLoad()
                 } else {
                     saveNewsArticles(it.articles)
                     callback.onNewsLoaded(it.articles)
                 }
-            },{
+            }, {
                 callback.onNewsFailedToLoad()
             })
     }

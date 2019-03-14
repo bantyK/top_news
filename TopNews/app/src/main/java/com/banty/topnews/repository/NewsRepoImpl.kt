@@ -1,6 +1,5 @@
 package com.banty.topnews.repository
 
-import android.util.Log
 import com.banty.topnews.datamodels.Article
 
 /**
@@ -20,14 +19,14 @@ class NewsRepoImpl(private val localNewsRepo: NewsRepository, private val remote
     /**
      * first checks the local storage, if data is avaiable directly returns the locally saved list of articles.
      * */
-    override fun getNewsArticles(category: String, callback: NewsRepository.LoadNewsCallback) {
+    override fun getNewsArticles(country: String, category: String, callback: NewsRepository.LoadNewsCallback) {
         if (isCacheDirty) {
             // cache has expired, so fetch news articles from server
-            fetchNewsFromRemoteDataSource(category, callback)
+            fetchNewsFromRemoteDataSource(country, category, callback)
         } else {
             // cache is not expired, try to fetch the locally saved news articles.
 //            Log.d(TAG, "Fetching local data")
-            localNewsRepo.getNewsArticles(category, object : NewsRepository.LoadNewsCallback {
+            localNewsRepo.getNewsArticles(country, category, object : NewsRepository.LoadNewsCallback {
                 override fun onNewsLoaded(articles: List<Article>) {
                     // articles found in local storage, return them
                     callback.onNewsLoaded(articles)
@@ -35,7 +34,7 @@ class NewsRepoImpl(private val localNewsRepo: NewsRepository, private val remote
 
                 override fun onNewsFailedToLoad() {
                     // cannot fetch data from local cache. Fetch it from server
-                    fetchNewsFromRemoteDataSource(category, callback)
+                    fetchNewsFromRemoteDataSource(country, category, callback)
                 }
 
             })
@@ -45,9 +44,13 @@ class NewsRepoImpl(private val localNewsRepo: NewsRepository, private val remote
     /**
      * This method calls the remote server to fetch news articles from newsAPI and update the cache
      * */
-    private fun fetchNewsFromRemoteDataSource(category: String, callback: NewsRepository.LoadNewsCallback) {
+    private fun fetchNewsFromRemoteDataSource(
+        country: String,
+        category: String,
+        callback: NewsRepository.LoadNewsCallback
+    ) {
 //        Log.d(TAG, "Fetching data from server")
-        remoteNewsRepo.getNewsArticles(category, loadNewsCallback(callback))
+        remoteNewsRepo.getNewsArticles(country, category, loadNewsCallback(callback))
     }
 
     private fun loadNewsCallback(callback: NewsRepository.LoadNewsCallback): NewsRepository.LoadNewsCallback {
@@ -74,8 +77,8 @@ class NewsRepoImpl(private val localNewsRepo: NewsRepository, private val remote
     }
 
     /**
-    * This method is called when local data needs to be updated.
-    * */
+     * This method is called when local data needs to be updated.
+     * */
     override fun refreshNews() {
         isCacheDirty = true
     }

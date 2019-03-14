@@ -2,6 +2,7 @@ package com.banty.topnews.ui.activities.news
 
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
+import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.NavigationView
@@ -9,6 +10,7 @@ import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.app.ActionBarDrawerToggle
+import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -17,7 +19,9 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.ArrayAdapter
 import android.widget.ProgressBar
+import android.widget.Spinner
 import android.widget.Toast
 import com.banty.topnews.R
 import com.banty.topnews.datamodels.Article
@@ -49,9 +53,12 @@ class NewsActivity : AppCompatActivity(), NewsActivityPresenter.View, Navigation
     // by default the category is general
     private var selectedCategory = "general"
 
+    // by default the country will be India
+    private var selectedCountry = "in"
+
     /**
      * Make the recycler view visible and hide the progress bar
-    * */
+     * */
     override fun showUI() {
         progressBar.visibility = View.GONE
         recyclerView.visibility = View.VISIBLE
@@ -116,7 +123,7 @@ class NewsActivity : AppCompatActivity(), NewsActivityPresenter.View, Navigation
             this,
             newsRepository,
             headlinesViewModel,
-            "in"
+            selectedCountry
         )
 
         /**
@@ -191,7 +198,7 @@ class NewsActivity : AppCompatActivity(), NewsActivityPresenter.View, Navigation
             }
         }
 
-        newsActivityPresenter.changeArticles(selectedCategory)
+        newsActivityPresenter.changeArticles(selectedCountry, selectedCategory)
         drawer_layout.closeDrawer(GravityCompat.START)
         return true
     }
@@ -203,7 +210,7 @@ class NewsActivity : AppCompatActivity(), NewsActivityPresenter.View, Navigation
      * */
     override fun onRefresh() {
         swipeToRefreshLayout.isRefreshing = false
-        newsActivityPresenter.getNewsHeadlines(selectedCategory, true)
+        newsActivityPresenter.getNewsHeadlines(selectedCountry, selectedCategory, true)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -215,12 +222,44 @@ class NewsActivity : AppCompatActivity(), NewsActivityPresenter.View, Navigation
 
         when (item.itemId) {
             R.id.change_country_settings -> {
+                showCountryChooserDialog()
                 return true
             }
             else -> return super.onOptionsItemSelected(item)
         }
     }
 
+
+    private fun showCountryChooserDialog() {
+        val alertDialogBuilder = AlertDialog.Builder(this)
+        val view = layoutInflater.inflate(R.layout.layout_spinner_dialog, null)
+        alertDialogBuilder.setTitle(getString(R.string.spinner_dialog_title))
+        val spinner = view.findViewById<Spinner>(R.id.country_chooser_spinner)
+        val adapter: ArrayAdapter<String> = ArrayAdapter(
+            this,
+            android.R.layout.simple_spinner_item,
+            resources.getStringArray(R.array.country_names)
+        )
+
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spinner.adapter = adapter
+
+        alertDialogBuilder.setPositiveButton(resources.getString(R.string.ok)) { dialog, _ ->
+            val selectedCountryCode = resources.getStringArray(R.array.country_codes)[spinner.selectedItemPosition]
+            Log.d(TAG, "Selected country : $selectedCountryCode")
+            selectedCountry = selectedCountryCode
+            newsActivityPresenter.handleCountrySelection(selectedCountryCode, selectedCategory)
+            dialog.dismiss()
+        }
+
+        alertDialogBuilder.setNegativeButton(resources.getString(R.string.cancel)) { dialog, _ ->
+            dialog.dismiss()
+        }
+
+        alertDialogBuilder.setView(view)
+        val alertDialog = alertDialogBuilder.create()
+        alertDialog.show()
+    }
 
     /**
      * Shows an error message in the UI when data fetching fails.
