@@ -9,7 +9,10 @@ https://github.com/googlesamples/android-architecture/tree/todo-mvp-clean/
 Following libraries are used in the app.
 
 Retrofit : For making the http calls. https://github.com/square/retrofit
+
 Dagger 2 : For dependency injection.  https://github.com/google/dagger
+
 Rx-Java : For handling concurrency and background processing. https://github.com/ReactiveX/RxJava
+
 Glide : For image loading and caching. https://github.com/bumptech/glide
 
